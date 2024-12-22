@@ -25,18 +25,18 @@
 1. On Mac / PC, use Terminal / Command line to SSH into the Satellite device.
 2. Generate SSH keys if not already present.
 ```
-ssh-keygen -t rsa -b 4096 -C username@hostname.local
+ssh-keygen -t rsa -b 4096 -C Papa@hostname.local
 ```
 3. Copy the SSH keys to the satellite device.
 ```
-ssh-copy-id username@hostname.local
+ssh-copy-id Papa@hostname.local
 ```
 ### Make sure to replace the username and hostname in the above command with the actual username and hostname used during Raspberry Pi OS Installation.
 
 ## Wyoming Satellite Setup
 1. SSH into the Wyoming Satellite (replace the username and hostname in all the commands with the actual username and hostname used during Raspberry Pi OS Installation).
 ```
-ssh username@hostname.local
+ssh Papa@hostname.local
 ```
 2. Update the Pi.
 ```
@@ -48,7 +48,7 @@ sudo reboot -h now
 ```
 4. SSH back into the Pi.
 ```
-ssh username@hostname.local
+ssh Papa@hostname.local
 ```
 5. Install necessary dependencies.
 ```
@@ -86,7 +86,7 @@ sudo reboot -h now
 ```
 10. SSH back into the Pi.
 ```
-ssh username@hostname.local
+ssh Papa@hostname.local
 ```
 11. Access the shell as root user.
 ```
@@ -120,7 +120,7 @@ sudo reboot -h now
 ```
 16. SSH back into the Pi.
 ```
-ssh username@hostname.local
+ssh Papa@hostname.local
 ```
 17. Clone Wyoming OpenWakeWord Github repo to the Pi.
 ```
@@ -137,27 +137,27 @@ sudo mkdir custom
 ```
 20. Set directory permissions to allow uploading the wakeword from the host machine (Mac / PC).
 ```
-sudo chmod -R 777 /home/username/wyoming-openwakeword/custom
+sudo chmod -R 777 /home/Papa/wyoming-openwakeword/custom
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-openwakeword/wyoming_openwakeword/models/
+sudo chmod -R 777 /home/Papa/wyoming-openwakeword/wyoming_openwakeword/models/
 ```
 ### Replace username in the file paths with the actual username used during Raspberry Pi OS Installation
 21. Upload the custom wakeword from Mac / PC (Replace the username and hostname in all the commands with the actual username and hostname used during Raspberry Pi OS Installation).
 ```
-scp /path/to/wakeword/wakeword.tflite username@hostname.local:/home/username/wyoming-openwakeword/custom/wakeword.tflite
+scp /path/to/wakeword/wakeword.tflite Papa@hostname.local:/home/Papa/wyoming-openwakeword/custom/wakeword.tflite
 ```
 ```
-scp /path/to/wakeword/wakeword.tflite username@hostname.local:/home/username/wyoming-openwakeword/wyoming_openwakeword/models/
+scp /path/to/wakeword/wakeword.tflite Papa@hostname.local:/home/Papa/wyoming-openwakeword/wyoming_openwakeword/models/
 ```
 ### Replace /path/to/wakeword/ with the actual path of the file on your host machine and wakeword.tflite with the actual custom wakeword filename.
 
 22. Make the newly uploaded custom wakeword file executable.
 ```
-sudo chmod -R 777 /home/username/wyoming-openwakeword/custom/wakeword.tflite
+sudo chmod -R 777 /home/Papa/wyoming-openwakeword/custom/wakeword.tflite
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-openwakeword/wyoming_openwakeword/models/wakeword.tflite
+sudo chmod -R 777 /home/Papa/wyoming-openwakeword/wyoming_openwakeword/models/wakeword.tflite
 ```
 ### Replace username in the file paths with the actual username used during Raspberry Pi OS Installation
 23. Create Wyoming OpenWakeWord service.
@@ -171,11 +171,11 @@ Description=Wyoming openWakeWord
 
 [Service]
 Type=simple
-ExecStart=/home/username/wyoming-openwakeword/script/run \
+ExecStart=/home/Papa/wyoming-openwakeword/script/run \
     --uri 'tcp://127.0.0.1:10400' \
-    --custom-model-dir /home/username/wyoming-openwakeword/custom \
+    --custom-model-dir /home/Papa/wyoming-openwakeword/custom \
     --preload-model 'wakewordnamehere'
-WorkingDirectory=/home/username/wyoming-openwakeword
+WorkingDirectory=/home/Papa/wyoming-openwakeword
 Restart=always
 RestartSec=1
 
@@ -191,7 +191,7 @@ sudo reboot -h now
 ```
 28. SSH back into the Pi.
 ```
-ssh username@hostname.local
+ssh Papa@hostname.local
 ```
 29. Access the shell as root user.
 ```
@@ -228,10 +228,10 @@ Description=2Mic LEDs
 
 [Service]
 Type=simple
-ExecStart=/home/username/wyoming-satellite/examples/.venv/bin/python3 2mic_service.py \
+ExecStart=/home/Papa/wyoming-satellite/examples/.venv/bin/python3 2mic_service.py \
     --uri 'tcp://127.0.0.1:10500' \
     --led-brightness 1
-WorkingDirectory=/home/username/wyoming-satellite/examples
+WorkingDirectory=/home/Papa/wyoming-satellite/examples
 Restart=always
 RestartSec=1
 
@@ -246,7 +246,7 @@ sudo reboot -h now
 ```
 39. SSH back into the Pi.
 ```
-ssh username@hostname.local
+ssh Papa@hostname.local
 ```
 40. Access the /etc/pulse/client.conf file and change 'autospawn = yes' to 'autospawn = no'.
 ```
@@ -256,7 +256,7 @@ sudo nano /etc/pulse/client.conf
 42. Press the Y key when prompted to save changes and then Press Enter to save and exit.
 43. Give non root bluetooth privileges (replace the username in the first command with the actual username used during Raspberry Pi OS Installation).
 ```
-sudo usermod -G bluetooth -a username
+sudo usermod -G bluetooth -a Papa
 ```
 ```
 sudo usermod -G bluetooth -a pulse
@@ -327,7 +327,7 @@ sudo systemctl --system start pulseaudio.service
 ```
 59. Give non-root necessary user permissions for Pulseaudio (replace username in the command with the actual username used during Raspberry Pi OS Installation).
 ```
-sudo sed -i '/^pulse-access:/ s/$/root,pi,snapclient,pulse,username/' /etc/group
+sudo sed -i '/^pulse-access:/ s/$/root,pi,snapclient,pulse,Papa/' /etc/group
 ```
 60. Reboot the Pi.
 ```
@@ -335,7 +335,7 @@ sudo reboot -h now
 ```
 61. SSH back into the Pi.
 ```
-ssh username@hostname.local
+ssh Papa@hostname.local
 ```
 62. Check available audio output sources (skip this and the steps 63 and 64 if opting for Bluetooth speaker as audio output).
 ```
@@ -371,7 +371,7 @@ sudo reboot -h now
 ```
 70. SSH back into the Pi.
 ```
-ssh username@hostname.local
+ssh Papa@hostname.local
 ```
 71. Clone the Wyoming Satellite Enhancements Github repo.
 ```
@@ -432,7 +432,7 @@ sudo reboot -h now
 ```
 81. SSH back into the Pi.
 ```
-ssh username@hostname.local
+ssh Papa@hostname.local
 ```
 82. Create the VLC TTS Service.
 ```
@@ -456,7 +456,7 @@ ExecStart=/usr/bin/vlc \
     --no-video \
     --no-osd \
     --no-one-instance -v
-User=username   
+User=Papa   
 Restart=on-failure
 
 [Install]
@@ -481,7 +481,7 @@ Requires=pulseaudio.service
 
 [Service]
 Type=simple
-ExecStart=/home/username/wyoming-satellite/script/run \
+ExecStart=/home/Papa/wyoming-satellite/script/run \
     --name SatelliteNameHere \
     --uri 'tcp://0.0.0.0:10700' \
     --mic-command 'parecord --property=media.role=phone --rate=16000 --channels=1 --format=s16le --raw --latency-msec 10' \
@@ -492,17 +492,17 @@ ExecStart=/home/username/wyoming-satellite/script/run \
     --wake-uri 'tcp://127.0.0.1:10400' \
     --wake-word-name 'wakewordnamehere' \
     --event-uri 'tcp://127.0.0.1:10500' \
-    --detection-command '/home/username/wyoming-enhancements/detected.sh' \
-    --synthesize-command '/home/username/wyoming-enhancements/synthesize.sh' \
-    --transcript-command '/home/username/wyoming-enhancements/transcript.sh' \
-    --tts-played-command '/home/username/wyoming-enhancements/done.sh' \
-    --error-command '/home/username/wyoming-enhancements/error.sh' \
-    --connected-command '/home/username/wyoming-satellite/examples/.venv/bin/python3 /home/username/wyoming-satellite/examples/status_connect.py' \
-    --disconnected-command '/home/username/wyoming-satellite/examples/.venv/bin/python3 /home/username/wyoming-satellite/examples/status_disconnect.py' \
+    --detection-command '/home/Papa/wyoming-enhancements/detected.sh' \
+    --synthesize-command '/home/Papa/wyoming-enhancements/synthesize.sh' \
+    --transcript-command '/home/Papa/wyoming-enhancements/transcript.sh' \
+    --tts-played-command '/home/Papa/wyoming-enhancements/done.sh' \
+    --error-command '/home/Papa/wyoming-enhancements/error.sh' \
+    --connected-command '/home/Papa/wyoming-satellite/examples/.venv/bin/python3 /home/Papa/wyoming-satellite/examples/status_connect.py' \
+    --disconnected-command '/home/Papa/wyoming-satellite/examples/.venv/bin/python3 /home/Papa/wyoming-satellite/examples/status_disconnect.py' \
     --awake-wav sounds/awake.wav \
     --timer-finished-wav sounds/timer_finished.wav \
     --timer-finished-wav-repeat 3 3
-WorkingDirectory=/home/username/wyoming-satellite
+WorkingDirectory=/home/Papa/wyoming-satellite
 Restart=always
 RestartSec=1
 
@@ -515,7 +515,7 @@ WantedBy=default.target
 89. Press the Y key when prompted to save changes and then Press Enter to save and exit.
 90. Navigate to the Wyoming Satellite sounds directory.
 ```
-cd /home/username/wyoming-satellite/sounds
+cd /home/Papa/wyoming-satellite/sounds
 ```
 91. Make audio files executable to allow access by the scripts in Wyoming Satellite service.
 ```
@@ -523,84 +523,84 @@ sudo chmod -R 777 done.wav
 ```
 92. Make files executable for to allow access by the Wyoming Satellite service (replace username in the commands with the actual username used during Raspberry Pi OS Installation).
 ```
-sudo chmod -R 777 /home/username/wyoming-enhancements/detected.py
+sudo chmod -R 777 /home/Papa/wyoming-enhancements/detected.py
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-enhancements/status_connect.py
+sudo chmod -R 777 /home/Papa/wyoming-enhancements/status_connect.py
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-enhancements/status_disconnect.py
+sudo chmod -R 777 /home/Papa/wyoming-enhancements/status_disconnect.py
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-enhancements/detected.sh
+sudo chmod -R 777 /home/Papa/wyoming-enhancements/detected.sh
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-enhancements/done.sh
+sudo chmod -R 777 /home/Papa/wyoming-enhancements/done.sh
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-enhancements/error.sh
+sudo chmod -R 777 /home/Papa/wyoming-enhancements/error.sh
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-enhancements/transcript.sh
+sudo chmod -R 777 /home/Papa/wyoming-enhancements/transcript.sh
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-enhancements/synthesize.sh
+sudo chmod -R 777 /home/Papa/wyoming-enhancements/synthesize.sh
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-enhancements/monitor_done.sh
+sudo chmod -R 777 /home/Papa/wyoming-enhancements/monitor_done.sh
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-satellite/script/run
+sudo chmod -R 777 /home/Papa/wyoming-satellite/script/run
 ```
 ```
-sudo chmod -R 777 /home/username/wyoming-enhancements/mute_button.py
+sudo chmod -R 777 /home/Papa/wyoming-enhancements/mute_button.py
 ```
 93. Edit the done.sh script to point to the correct custom sound directory
 ```
-sudo nano /home/username/wyoming-enhancements/done.sh
+sudo nano /home/Papa/wyoming-enhancements/done.sh
 ```
 94. Replace 'username' in the below line with the actual username used during Raspberry Pi OS Installation.
 ```
-paplay --property=media.role=notification /home/username/wyoming-satellite/sounds/done.wav 
+paplay --property=media.role=notification /home/Papa/wyoming-satellite/sounds/done.wav 
 ```
 95. Edit the detected.sh script to point to the correct custom sound directory
 ```
-sudo nano /home/username/wyoming-enhancements/detected.sh
+sudo nano /home/Papa/wyoming-enhancements/detected.sh
 ```
 96. Replace 'username' in the below line with the actual username used during Raspberry Pi OS Installation.
 ```
-/home/username/wyoming-satellite/examples/.venv/bin/python3 /home/username/wyoming-satellite/examples/detected.py
+/home/Papa/wyoming-satellite/examples/.venv/bin/python3 /home/Papa/wyoming-satellite/examples/detected.py
 ```
 97. Edit each of the error.sh, transcript.sh and synthesize.sh scripts to update Home Assistant details. (replace username in the commands with the actual username used during Raspberry Pi OS Installation).
 ```
-sudo nano /home/username/wyoming-enhancements/error.sh
+sudo nano /home/Papa/wyoming-enhancements/error.sh
 ```
 ```
-sudo nano /home/username/wyoming-enhancements/transcript.sh
+sudo nano /home/Papa/wyoming-enhancements/transcript.sh
 ```
 ```
-sudo nano /home/username/wyoming-enhancements/synthesize.sh
+sudo nano /home/Papa/wyoming-enhancements/synthesize.sh
 ```
 98. Edit the done.sh script to point to the correct custom sound directory
 ```
-sudo nano /home/username/wyoming-enhancements/done.sh
+sudo nano /home/Papa/wyoming-enhancements/done.sh
 ```
 99. Replace 'username' in the below line with the actual username to point to the correct location of the done.sh script.
 ```
-/home/username/wyoming-enhancements/done.sh
+/home/Papa/wyoming-enhancements/done.sh
 ```
 100. Edit each of the detected.py, mute_button.py, status_connect.py and status_disonnect.py files to update the MQTT configuration details. (replace username in the commands with the actual username used during Raspberry Pi OS Installation).
 ```
-sudo nano /home/username/wyoming-enhancements/detected.py
+sudo nano /home/Papa/wyoming-enhancements/detected.py
 ```
 ```
-sudo nano /home/username/wyoming-enhancements/status_connect.py
+sudo nano /home/Papa/wyoming-enhancements/status_connect.py
 ```
 ```
-sudo nano /home/username/wyoming-enhancements/status_disconnect.py
+sudo nano /home/Papa/wyoming-enhancements/status_disconnect.py
 ```
 ```
-sudo nano /home/username/wyoming-enhancements/mute_button.py
+sudo nano /home/Papa/wyoming-enhancements/mute_button.py
 ```
 101. Replace the configuration details in the above files as per instructions.
 ```
@@ -612,16 +612,16 @@ MQTT_TOPIC = "mqtt/status" # Replace with your own MQTT topic name
 ```
 102. Move files to the correct directory. (replace username in the commands with the actual username used during Raspberry Pi OS Installation).
 ```
-sudo mv /home/username/wyoming-enhancements/mute_button.py /home/username/wyoming-satellite/examples/mute_button.py
+sudo mv /home/Papa/wyoming-enhancements/mute_button.py /home/Papa/wyoming-satellite/examples/mute_button.py
 ```
 ```
-sudo mv /home/username/wyoming-enhancements/detected.py /home/username/wyoming-satellite/examples/detected.py
+sudo mv /home/Papa/wyoming-enhancements/detected.py /home/Papa/wyoming-satellite/examples/detected.py
 ```
 ```
-sudo mv /home/username/wyoming-enhancements/status_connect.py /home/username/wyoming-satellite/examples/status_connect.py
+sudo mv /home/Papa/wyoming-enhancements/status_connect.py /home/Papa/wyoming-satellite/examples/status_connect.py
 ```
 ```
-sudo mv /home/username/wyoming-enhancements/status_disconnect.py /home/username/wyoming-satellite/examples/status_disconnect.py
+sudo mv /home/Papa/wyoming-enhancements/status_disconnect.py /home/Papa/wyoming-satellite/examples/status_disconnect.py
 ```
 103. Create a systemd service for mute button.
 ```
@@ -635,7 +635,7 @@ After=network.target
 After=wyoming-satellite.service
 
 [Service]
-ExecStart=/home/username/wyoming-enhancements/monitor_done.sh
+ExecStart=/home/Papa/wyoming-enhancements/monitor_done.sh
 Restart=always
 RestartSec=1
 
@@ -655,8 +655,8 @@ Description=Mute button
 
 [Service]
 Type=simple
-ExecStart=/home/username/wyoming-satellite/examples/.venv/bin/python3 mute_button.py --uri 'tcp://127.0.0.1:10510'
-WorkingDirectory=/home/username/wyoming-satellite/examples
+ExecStart=/home/Papa/wyoming-satellite/examples/.venv/bin/python3 mute_button.py --uri 'tcp://127.0.0.1:10510'
+WorkingDirectory=/home/Papa/wyoming-satellite/examples
 Restart=always
 RestartSec=1
 
@@ -785,7 +785,7 @@ sudo crontab -e
 ```
 16. Add the below lines at the end:
 ```
-@reboot sleep 30 && /home/username/bluetooth_startup.sh
+@reboot sleep 30 && /home/Papa/bluetooth_startup.sh
 ```
 17. Press the Control and X keys on your keyboard.
 18. Press the Y key when prompted to save changes and then Press Enter to save and exit.
