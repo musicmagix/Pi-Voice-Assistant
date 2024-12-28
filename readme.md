@@ -131,7 +131,7 @@ sudo git clone https://github.com/rhasspy/wyoming-openwakeword.git
 cd wyoming-openwakeword/
 sudo script/setup
 ```
-19. Create a directory for storing your custom wakeword (Download .tflite file from https://github.com/fwartner/home-assistant-wakewords-collection).
+19. (Skip 19-22 if you use a common wake word like "hey_jarvis") Create a directory for storing your custom wakeword (Download .tflite file from https://github.com/fwartner/home-assistant-wakewords-collection).
 ```
 sudo mkdir custom
 ```
