@@ -253,7 +253,7 @@ sudo nano /etc/pulse/client.conf
 ```
 41. Press the Control and X keys on your keyboard.
 42. Press the Y key when prompted to save changes and then Press Enter to save and exit.
-43. Give non root bluetooth privileges (replace the username in the first command with the actual username used during Raspberry Pi OS Installation).
+43. (Skip 43-53 if you don't use bluetooth) Give non root bluetooth privileges (replace the username in the first command with the actual username used during Raspberry Pi OS Installation).
 ```
 sudo usermod -G bluetooth -a Papa
 ```
