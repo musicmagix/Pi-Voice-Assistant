@@ -455,7 +455,7 @@ ExecStart=/usr/bin/vlc \
     --no-video \
     --no-osd \
     --no-one-instance -v
-User=Papa   
+User=Papa
 Restart=on-failure
 
 [Install]
