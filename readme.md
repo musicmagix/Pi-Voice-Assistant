@@ -492,8 +492,6 @@ ExecStart=/home/Papa/wyoming-satellite/script/run \
     --wake-word-name 'wakewordnamehere' \
     --event-uri 'tcp://127.0.0.1:10500' \
     --detection-command '/home/Papa/wyoming-enhancements/detected.sh' \
-    --synthesize-command '/home/Papa/wyoming-enhancements/synthesize.sh' \
-    --transcript-command '/home/Papa/wyoming-enhancements/transcript.sh' \
     --tts-played-command '/home/Papa/wyoming-enhancements/done.sh' \
     --error-command '/home/Papa/wyoming-enhancements/error.sh' \
     --connected-command '/home/Papa/wyoming-satellite/examples/.venv/bin/python3 /home/Papa/wyoming-satellite/examples/status_connect.py' \
