@@ -589,7 +589,7 @@ sudo systemctl daemon-reload
 ```
 113. Check the status of all the newly created services.
 ```
-sudo systemctl status wyoming-satellite.service wyoming-openwakeword.service 2mic_leds.service pulseaudio.service snapclient.service vlc-tts.service bluetooth.service monitor-done.service mute_button.service
+sudo systemctl status wyoming-satellite.service wyoming-openwakeword.service 2mic_leds.service pulseaudio.service snapclient.service vlc-tts.service 
 ```
 114. Reboot the Pi.
 ```
