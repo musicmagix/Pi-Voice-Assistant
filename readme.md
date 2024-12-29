@@ -58,10 +58,6 @@ sudo apt-get install --no-install-recommends  \
   libopenblas-dev \
   python3-spidev \
   python3-gpiozero \
-  pulseaudio \
-  bluetooth \
-  bluez-tools \
-  pulseaudio-module-bluetooth \
   pulseaudio-utils \
   mosquitto.clients \
   espeak \
