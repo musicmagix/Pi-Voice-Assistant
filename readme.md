@@ -1,13 +1,11 @@
-# How to create a Personal Voice Assistant for Home Assistant using Raspberry Pi Zero 2 W and a ReSpeaker 2Mic HAT with Visual Feedback on Dashboard, On-device Wakeword Detection, Enhanced LED feedback, Physical Mute Switch, Volume Ducking, Multi-Room Audio, Bluetooth Speaker for Audio output, ability to execute TTS actions from Home Assistant automations.
+# How to create a Personal Voice Assistant for Home Assistant using Raspberry Pi Zero 2 W and a ReSpeaker 2Mic HAT with On-device Wakeword Detection, Physical Mute Switch, Volume Ducking, Multi-Room Audio, and the ability to execute TTS actions from Home Assistant automations.
 
 ## Pre-requisites:
 * Raspberry Pi Zero 2 W with a compatible 64GB microSD Card
 * A microSD Card reader for Mac / PC to install Pi OS on the card
 * ReSpeaker 2Mic HAT (https://wiki.seeedstudio.com/ReSpeaker_2_Mics_Pi_HAT/)
 * Home Assistant OS device (for installing snapcast-server add-on)
-* A Voice Pipeline already setup in Home Assistant (you can follow https://www.youtube.com/watch?v=Vp_AaXQLtac but skip installing openWakeWord add-on as it's not needed in this case)
-* Browser Mod Custom Integration installed in Home Assistant for Visual Feedback on a tablet or other such display. (Optional)
-* Simple template sensor entity (named sensor.assist_speech) in Home Assistant. (Optional)
+* A Voice Pipeline already setup in Home Assistant
 * Mosquitto Broker Home Assistant Add-on (or docker container) and MQTT Integration installed in Home Assistant.
 
 ## Raspberry Pi OS Installation:
@@ -20,18 +18,6 @@
 7. Click 'Yes' when prompted to apply OS customisation settings.
 8. Click 'Yes' when prompted to erase the previously selected storage.
 9. Once the OS installation is complete, connect your preferred storage to the Raspberry Pi and connect it to a power source.
-
-## SSH Setup
-1. On Mac / PC, use Terminal / Command line to SSH into the Satellite device.
-2. Generate SSH keys if not already present.
-```
-ssh-keygen -t rsa -b 4096 -C Papa@hostname.local
-```
-3. Copy the SSH keys to the satellite device.
-```
-ssh-copy-id Papa@hostname.local
-```
-### Make sure to replace the username and hostname in the above command with the actual username and hostname used during Raspberry Pi OS Installation.
 
 ## Wyoming Satellite Setup
 1. SSH into the Wyoming Satellite (replace the username and hostname in all the commands with the actual username and hostname used during Raspberry Pi OS Installation).
@@ -65,7 +51,7 @@ sudo apt-get install --no-install-recommends  \
 ```
 6. Clone the Wyoming Satellite Github repo to the Pi.
 ```
-sudo git clone https://github.com/sayam93/wyoming-satellite.git
+git clone https://github.com/rhasspy/wyoming-satellite.git
 ```
 7. Navigate to the wyoming-satellite directory and install drivers for the ReSpeaker 2Mic HAT.
 ```
@@ -127,49 +113,18 @@ sudo git clone https://github.com/rhasspy/wyoming-openwakeword.git
 cd wyoming-openwakeword/
 sudo script/setup
 ```
-19. (Skip 19-22 if you use a common wake word like "hey_jarvis") Create a directory for storing your custom wakeword (Download .tflite file from https://github.com/fwartner/home-assistant-wakewords-collection).
-```
-sudo mkdir custom
-```
-20. Set directory permissions to allow uploading the wakeword from the host machine (Mac / PC).
-```
-sudo chmod -R 777 /home/Papa/wyoming-openwakeword/custom
-```
-```
-sudo chmod -R 777 /home/Papa/wyoming-openwakeword/wyoming_openwakeword/models/
-```
-### Replace username in the file paths with the actual username used during Raspberry Pi OS Installation
-21. Upload the custom wakeword from Mac / PC (Replace the username and hostname in all the commands with the actual username and hostname used during Raspberry Pi OS Installation).
-```
-scp /path/to/wakeword/wakeword.tflite Papa@hostname.local:/home/Papa/wyoming-openwakeword/custom/wakeword.tflite
-```
-```
-scp /path/to/wakeword/wakeword.tflite Papa@hostname.local:/home/Papa/wyoming-openwakeword/wyoming_openwakeword/models/
-```
-### Replace /path/to/wakeword/ with the actual path of the file on your host machine and wakeword.tflite with the actual custom wakeword filename.
-
-22. Make the newly uploaded custom wakeword file executable.
-```
-sudo chmod -R 777 /home/Papa/wyoming-openwakeword/custom/wakeword.tflite
-```
-```
-sudo chmod -R 777 /home/Papa/wyoming-openwakeword/wyoming_openwakeword/models/wakeword.tflite
-```
-### Replace username in the file paths with the actual username used during Raspberry Pi OS Installation
-23. Create Wyoming OpenWakeWord service.
+19. Create Wyoming OpenWakeWord service.
 ```
 sudo systemctl edit --force --full wyoming-openwakeword.service
 ```
-24. Paste the following (replace the username in the below with the actual username used during Raspberry Pi OS Installation):
+20. Paste the following (replace the username in the below with the actual username used during Raspberry Pi OS Installation):
 ```
 [Unit]
 Description=Wyoming openWakeWord
 
 [Service]
 Type=simple
-ExecStart=/home/Papa/wyoming-openwakeword/script/run \
-    --uri 'tcp://127.0.0.1:10400' \
-    --preload-model 'hey_jarvis'
+ExecStart=/home/Papa/wyoming-openwakeword/script/run --uri 'tcp://127.0.0.1:10400'
 WorkingDirectory=/home/Papa/wyoming-openwakeword
 Restart=always
 RestartSec=1
@@ -177,55 +132,52 @@ RestartSec=1
 [Install]
 WantedBy=default.target
 ```
-### Replace the wakewordnamehere phrase in the preload-model section with the custom wakeword name or use the standard ones such as 'ok_nabu', 'hey_jarvis' or 'hey_mycroft' (Skip step 21 and 22 if using a standard wakeword).
-25. Press the Control and X keys on your keyboard.
-26. Press the Y key when prompted to save changes and then Press Enter to save and exit.
-27. Reboot the Pi.
+21. Press the Control and X keys on your keyboard.
+22. Press the Y key when prompted to save changes and then Press Enter to save and exit.
+23. Reboot the Pi.
 ```
 sudo reboot -h now
 ```
-28. SSH back into the Pi.
+24. SSH back into the Pi.
 ```
 ssh Papa@hostname.local
 ```
-29. Access the shell as root user.
+25. Access the shell as root user.
 ```
 sudo -s
 ```
-30. Create a Virtual Python Environment and update all the dependencies necessary to use the Wyoming Satellite service.
+26. Create a Virtual Python Environment and update all the dependencies necessary to use the Wyoming Satellite service.
 ```
 cd wyoming-satellite/examples
 python3 -m venv --system-site-packages .venv
 .venv/bin/pip3 install --upgrade pip
 .venv/bin/pip3 install --upgrade wheel setuptools
-.venv/bin/pip3 install 'wyoming==1.5.4'
+.venv/bin/pip3 install 'wyoming==1.6.0'
 ```
-31. Exit root user shell.
+27. Exit root user shell.
 ```
 exit
 ```
-32. Navigate to the examples directory inside the cloned Wyoming Satellite repo.
+28. Navigate to the examples directory inside the cloned Wyoming Satellite repo.
 ```
 cd ~/wyoming-satellite/examples
 ```
-33. Check the setup for Led Service for the ReSpeaker 2Mic HAT.
+29. Check the setup for Led Service for the ReSpeaker 2Mic HAT.
 ```
 sudo .venv/bin/python3 2mic_service.py --help
 ```
-34. Create a service for the LEDs on the 2Mic HAT.
+30. Create a service for the LEDs on the 2Mic HAT.
 ```
 sudo systemctl edit --force --full 2mic_leds.service
 ```
-35. Paste the following (replace the username in the below with the actual username used during Raspberry Pi OS Installation):
+31. Paste the following (replace the username in the below with the actual username used during Raspberry Pi OS Installation):
 ```
 [Unit]
 Description=2Mic LEDs
 
 [Service]
 Type=simple
-ExecStart=/home/Papa/wyoming-satellite/examples/.venv/bin/python3 2mic_service.py \
-    --uri 'tcp://127.0.0.1:10500' \
-    --led-brightness 1
+ExecStart=/home/Papa/wyoming-satellite/examples/.venv/bin/python3 2mic_service.py --uri 'tcp://127.0.0.1:10500'
 WorkingDirectory=/home/Papa/wyoming-satellite/examples
 Restart=always
 RestartSec=1
@@ -233,70 +185,31 @@ RestartSec=1
 [Install]
 WantedBy=default.target
 ```
-36. Press the Control and X keys on your keyboard.
-37. Press the Y key when prompted to save changes and then Press Enter to save and exit.
-38. Reboot the Pi.
+32. Press the Control and X keys on your keyboard.
+33. Press the Y key when prompted to save changes and then Press Enter to save and exit.
+34. Reboot the Pi.
 ```
 sudo reboot -h now
 ```
-39. SSH back into the Pi.
+35. SSH back into the Pi.
 ```
 ssh Papa@hostname.local
 ```
-40. Access the /etc/pulse/client.conf file and change 'autospawn = yes' to 'autospawn = no'.
+36. Access the /etc/pulse/client.conf file and change 'autospawn = yes' to 'autospawn = no'.
 ```
 sudo nano /etc/pulse/client.conf
 ```
-41. Press the Control and X keys on your keyboard.
-42. Press the Y key when prompted to save changes and then Press Enter to save and exit.
-43. (Skip 43-53 if you don't use bluetooth) Give non root bluetooth privileges (replace the username in the first command with the actual username used during Raspberry Pi OS Installation).
-```
-sudo usermod -G bluetooth -a Papa
-```
-```
-sudo usermod -G bluetooth -a pulse
-```
-44. Edit the /lib/systemd/system/bluetooth.service file.
-```
-sudo nano /lib/systemd/system/bluetooth.service
-```
-45. Change the below line from:
-```
-ExecStart=/usr/libexec/bluetooth/bluetoothd
-```
-to:
-```
-ExecStart=/usr/libexec/bluetooth/bluetoothd --plugin=a2dp
-```
-46. Press the Control and X keys on your keyboard.
-47. Press the Y key when prompted to save changes and then Press Enter to save and exit.
-48. Reload Systemd Daemon.
-```
-sudo systemctl daemon-reload
-```
-49. Restart Bluetooth.
-```
-sudo systemctl restart bluetooth
-```
-50. Edit the /etc/bluetooth/main.conf bluetooth config file.
-```
-sudo nano /etc/bluetooth/main.conf
-```
-51. Add the below line at the end of the file:
-```
-ControllerMode = bredr
-```
-52. Press the Control and X keys on your keyboard.
-53. Press the Y key when prompted to save changes and then Press Enter to save and exit.
-54. Disable Pulse Audio Services.
+37. Press the Control and X keys on your keyboard.
+38. Press the Y key when prompted to save changes and then Press Enter to save and exit.
+39. Disable Pulse Audio Services.
 ```
 sudo systemctl --global disable pulseaudio.service pulseaudio.socket
 ```
-55. Create the Pulseaudio service.
+40. Create the Pulseaudio service.
 ```
 sudo systemctl edit --force --full pulseaudio.service
 ```
-56. Clear the existing contents and paste the following:
+41. Clear the existing contents and paste the following:
 ```
 [Unit]
 Description=PulseAudio system server
@@ -312,67 +225,54 @@ ExecStart=pulseaudio \
 [Install]
 WantedBy=multi-user.target
 ```
-57. Enable the Pulseaudio service.
+42. Enable the Pulseaudio service.
 ```
 sudo systemctl --system enable pulseaudio.service
 ```
-58. Start the Pulseaudio service.
+43. Start the Pulseaudio service.
 ```
 sudo systemctl --system start pulseaudio.service
 ```
-59. Give non-root necessary user permissions for Pulseaudio (replace username in the command with the actual username used during Raspberry Pi OS Installation).
+44. Give non-root necessary user permissions for Pulseaudio (replace username in the command with the actual username used during Raspberry Pi OS Installation).
 ```
 sudo sed -i '/^pulse-access:/ s/$/root,pi,snapclient,pulse,Papa/' /etc/group
 ```
-60. Reboot the Pi.
+45. Reboot the Pi.
 ```
 sudo reboot -h now
 ```
-61. SSH back into the Pi.
+46. SSH back into the Pi.
 ```
 ssh Papa@hostname.local
 ```
-62. Check available audio output sources (skip this and the steps 63 and 64 if opting for Bluetooth speaker as audio output).
+48. Test and make sure you hear the wav file:
 ```
-sudo pactl list sinks
+paplay /usr/share/sounds/alsa/Front_Center.wav
 ```
-63. Change output to activate audio jack on the 2Mic HAT.
-```
-sudo pactl set-sink-port 1 "analog-output-headphones"
-```
-64. Test the audio output from the speaker / headphones attached to the audio jack.
-```
-sudo paplay /usr/share/sounds/alsa/Front_Center.wav
-```
-65. Edit the /etc/pulse/system.pa file to enable Volume Ducking.
+49. Edit the /etc/pulse/system.pa file to enable Volume Ducking.
 ```
 sudo nano /etc/pulse/system.pa
 ```
-66. Add the below lines at the end of the file:
+50. Add the below lines at the end of the file:
 ```
-load-module module-bluetooth-discover
-
 ### Enable Volume Ducking
 load-module module-role-ducking trigger_roles=announce,phone,notification,event ducking_roles=any_role volume=33%
-
-# automatically switch to newly-connected devices
-load-module module-switch-on-connect
 ```
-67. Press the Control and X keys on your keyboard.
-68. Press the Y key when prompted to save changes and then Press Enter to save and exit.
-69. Reboot the Pi.
+51. Press the Control and X keys on your keyboard.
+52. Press the Y key when prompted to save changes and then Press Enter to save and exit.
+53. Reboot the Pi.
 ```
 sudo reboot -h now
 ```
-70. SSH back into the Pi.
+54. SSH back into the Pi.
 ```
 ssh Papa@hostname.local
 ```
-71. Clone the Wyoming Satellite Enhancements Github repo.
+55. Clone the Wyoming Satellite Enhancements Github repo.
 ```
-sudo git clone https://github.com/sayam93/wyoming-enhancements.git
+git clone https://github.com/FutureProofHomes/wyoming-enhancements.git
 ```
-72. Navigate to the wyoming-enhancements directory.
+56. Navigate to the wyoming-enhancements directory.
 ```
 cd wyoming-enhancements/
 ```
@@ -467,7 +367,7 @@ sudo systemctl edit --force --full wyoming-satellite.service
 87. Paste the following (replace the username everywhere in the below with the actual username used during Raspberry Pi OS Installation):
 ```
 [Unit]
-Description=Wyoming Satellite
+Description=Enhanced Wyoming Satellite
 Wants=network-online.target
 After=network-online.target
 Requires=wyoming-openwakeword.service
@@ -477,24 +377,24 @@ Requires=pulseaudio.service
 [Service]
 Type=simple
 ExecStart=/home/Papa/wyoming-satellite/script/run \
-    --name SatelliteNameHere \
+    --name 'Satellite name' \
     --uri 'tcp://0.0.0.0:10700' \
     --mic-command 'parecord --property=media.role=phone --rate=16000 --channels=1 --format=s16le --raw --latency-msec 10' \
     --snd-command 'paplay --property=media.role=announce --rate=44100 --channels=1 --format=s16le --raw --latency-msec 10' \
     --snd-command-rate 44100 \
+    --snd-volume-multiplier 0.1 \
     --mic-auto-gain 7 \
     --mic-noise-suppression 3 \
     --wake-uri 'tcp://127.0.0.1:10400' \
-    --wake-word-name 'wakewordnamehere' \
+    --wake-word-name 'hey_jarvis' \
     --event-uri 'tcp://127.0.0.1:10500' \
-    --detection-command '/home/Papa/wyoming-enhancements/detected.sh' \
-    --tts-played-command '/home/Papa/wyoming-enhancements/done.sh' \
-    --error-command '/home/Papa/wyoming-enhancements/error.sh' \
-    --connected-command '/home/Papa/wyoming-satellite/examples/.venv/bin/python3 /home/Papa/wyoming-satellite/examples/status_connect.py' \
-    --disconnected-command '/home/Papa/wyoming-satellite/examples/.venv/bin/python3 /home/Papa/wyoming-satellite/examples/status_disconnect.py' \
+    --detection-command '/home/Papa/wyoming-enhancements/snapcast/scripts/awake.sh' \
+    --tts-stop-command '/home/Papa/wyoming-enhancements/snapcast/scripts/done.sh' \
+    --error-command '/home/Papa/wyoming-enhancements/snapcast/scripts/done.sh' \
     --awake-wav sounds/awake.wav \
     --timer-finished-wav sounds/timer_finished.wav \
-    --timer-finished-wav-repeat 3 3
+    --timer-finished-wav-repeat 3 2
+    --done-wav sounds/done.wav
 WorkingDirectory=/home/Papa/wyoming-satellite
 Restart=always
 RestartSec=1
@@ -502,8 +402,7 @@ RestartSec=1
 [Install]
 WantedBy=default.target
 ```
-### Replace Satellite name in the name section and the wakeword name in preload model section with your custom wakeword name or use the standard ones such as 'ok_nabu', 'hey_jarvis' or 'hey_mycroft' (Skip step 18 and 19 if using a standard wakeword). The wakeword name should be the same as the one used while creating the OpenWakeWord service
-
+### Replace Satellite name in the name section and the wakeword name in preload model section with your custom wakeword name or use the standard ones such as 'ok_nabu', 'hey_jarvis' or 'hey_mycroft' 
 88. Press the Control and X keys on your keyboard.
 89. Press the Y key when prompted to save changes and then Press Enter to save and exit.
 90. Navigate to the Wyoming Satellite sounds directory.
