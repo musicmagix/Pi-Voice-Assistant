@@ -1048,3 +1048,4 @@ mode: single
 
 ## Credits:
 This tutorial is based on the work done by rhasspy (https://github.com/rhasspy/wyoming-satellite)
+All the heavy lifting was done by @sayam93. This fork only helped my understand his incredible work and simplify the installation process for me.
