@@ -228,10 +228,10 @@ Description=2Mic LEDs
 
 [Service]
 Type=simple
-ExecStart=/home/username/wyoming-satellite/examples/.venv/bin/python3 2mic_service.py \
+ExecStart=/home/Papa/wyoming-satellite/examples/.venv/bin/python3 2mic_service.py \
     --uri 'tcp://127.0.0.1:10500' \
     --led-brightness 1
-WorkingDirectory=/home/username/wyoming-satellite/examples
+WorkingDirectory=/home/Papa/wyoming-satellite/examples
 Restart=always
 RestartSec=1
 
