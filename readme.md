@@ -327,7 +327,7 @@ sudo systemctl --system start pulseaudio.service
 ```
 59. Give non-root necessary user permissions for Pulseaudio (replace username in the command with the actual username used during Raspberry Pi OS Installation).
 ```
-sudo sed -i '/^pulse-access:/ s/$/root,pi,snapclient,pulse,username/' /etc/group
+sudo sed -i '/^pulse-access:/ s/$/root,pi,snapclient,pulse,Papa/' /etc/group
 ```
 60. Reboot the Pi.
 ```
