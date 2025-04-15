@@ -339,7 +339,7 @@ ssh Papa@hostname.local
 ```
 sudo pactl list sinks
 ```
-63. Change output to activate audio jack on the 2Mic HAT.
+63. Change output to activate audio jack on the 2Mic HAT. (skip in current setup)
 ```
 sudo pactl set-sink-port 1 "analog-output-headphones"
 ```
