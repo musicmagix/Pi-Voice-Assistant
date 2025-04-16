@@ -172,7 +172,7 @@ Description=Wyoming openWakeWord
 [Service]
 Type=simple
 ExecStart=/home/Papa/wyoming-openwakeword/script/run \
-  --uri 'tcp://127.0.0.1:10400'
+    --uri 'tcp://127.0.0.1:104>
 WorkingDirectory=/home/Papa/wyoming-openwakeword
 Restart=always
 RestartSec=1
